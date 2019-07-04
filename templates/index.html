@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <script>
+
+        alert('Please enter your display name.');
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('#name').innerHTML = '';
+            document.querySelector('button').disabled = true;
+            document.querySelector('#name').onkeyup = () => {
+              if (document.querySelector('#name').value.length > 0)
+                  document.querySelector('button').disabled = false;
+              else
+                  document.querySelector('button').disabled = true;
+            };
+
+          })
+      </script>
+        <title>chachat</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <h6 class="display-1"><center>chachat</h6>
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col">
+              <form action="{{ url_for('channel') }}" method="post">
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">display name</label>
+                      <input type="text" class="form-control" name="name" placeholder="enter display name" id="name">
+                  </div>
+                  <button  class="btn btn-primary">sign in</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </body>
+</html>

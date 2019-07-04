@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <script>
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            document.querySelector('button').disabled = true;
+            document.querySelector('#newchannel').onkeyup = () => {
+              if (document.querySelector('#newchannel').value.length > 0)
+                  document.querySelector('button').disabled = false;
+              else
+                  document.querySelector('button').disabled = true;
+            };
+
+        });
+      </script>
+        <title>chachat</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <h6 class="display-1"><center>chachat</h6>
+        <div class="container">
+          <h4>Welcome, {{name}}!</h4>
+          {% if not channels %}
+              Currently, there is no channel.
+          {% else %}
+              <p>Here is our channel list:</p>
+              <div class="list-group">
+              {% for achannel in channels %}
+                  <a href="{{ url_for('chat', achannel=achannel) }}" class="list-group-item list-group-item-action">
+                    {{achannel}}
+                  </a>
+              {% endfor %}
+              </div>
+          {% endif %}
+
+          <br>
+          <br>
+          <form action="{{ url_for('newchannel') }}" method="post" onSubmit="window.location.reload();">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">You can create a new channel.</label>
+                  <input type="text" class="form-control" placeholder="enter a new channel name" id="newchannel" name="newchannel">
+              </div>
+              <button class="btn btn-success">create</button>   <a href="{{ url_for('signin') }}" class="btn btn-secondary">log out</a>
+          </form>
+        </div>
+    </body>
+</html>

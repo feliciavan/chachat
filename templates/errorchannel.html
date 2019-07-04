@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Error
+{% endblock %}
+
+{% block heading %}
+    chachat
+{% endblock %}
+
+{% block body %}
+
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">error</h4>
+        <p>{{ message }}</p>
+    </div>
+<a href="{{ url_for('newchannel') }}" class="btn btn-danger">back</a>
+{% endblock %}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>
+
+      <script>
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            document.querySelector('button').disabled = true;
+            document.querySelector('#newmessage').onkeyup = () => {
+                if (document.querySelector('#newmessage').value.length > 0)
+                    document.querySelector('button').disabled = false;
+                else
+                    document.querySelector('button').disabled = true;
+              };
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+            socket.on('connect', () => {
+
+                // Each button should emit a "submit vote" event
+                document.querySelector('button').onclick = () =>{
+
+                        const content = document.querySelector('#newmessage').value;
+
+
+                        const today = new Date();
+                        const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                        const smalltime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                        const time = date+' '+smalltime;
+
+                        // const today  = new Date();
+                        // const time = today.toLocaleString();
+
+                        const channel = document.querySelector('#channel').innerHTML;
+                        socket.emit('submit mess', {'content': content,'time':time,'channel':channel});
+                };
+            });
+            socket.on('mess totals', data => {
+              var i, div1, div2, h5, h6, p, newnum, middle, newname, newmess, newtime, newcontent;
+              document.querySelector('#message').innerHTML ='';
+              for (i = 0; i < Object.keys(data).length; i++) {
+
+                div1 = document.createElement('div');
+                div1.className = 'card';
+                div1.style = 'width: 18rem';
+
+                div2 = document.createElement('div');
+                div2.className = 'card-body';
+
+                h5 = document.createElement('h5');
+                h5.className = 'card-title';
+                newnum = Object.keys(data)[i];
+                middle = data[newnum]
+                newname = Object.keys(middle)[0];
+                h5.innerHTML = newname;
+
+                h6 = document.createElement('h6');
+                h6.className = 'card-subtitle mb-2 text-muted';
+                newmess = middle[newname]
+                newtime = Object.keys(newmess)[0];
+                h6.innerHTML = newtime;
+
+                p = document.createElement('p');
+                p.className = 'card-text';
+                newcontent = newmess[newtime];
+                p.innerHTML = newcontent;
+
+                div2.appendChild(h5);
+                div2.appendChild(h6);
+                div2.appendChild(p);
+                div1.appendChild(div2);
+                document.querySelector('#message').append(div1);
+              }
+
+            });
+
+        });
+      </script>
+
+        <title>chachat</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+
+    <body>
+        <h6 class="display-1"><center>chachat</h6>
+        <div class="container">
+            <h4 style="font-weight:bold">Wecolem to Channel <span id="channel" style="color:#13d3c6">{{achannel}}</span>!</h4>
+            <div id="message">
+                {% if not ch_mess %}
+                    Currently, there is no message in this channel.
+                    {% else %}
+                        {% for key, value in ch_mess.items() %}
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                  {% for key1, value1 in value.items() %}
+                                    <h5 class="card-title">{{key1}}</h5>
+                                    {% for key2, value2 in value1.items() %}
+                                    <h6 class="card-subtitle mb-2 text-muted">{{key2}}</h6>
+                                    <p class="card-text"> {{value2}}</p>
+                                    {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+          </div>
+
+          <br>
+          <form>
+              <div class="form-group">
+                  <label for="exampleInputEmail1">{{name}}, what do you want to say?</label>
+                  <input class="form-control" type="text" placeholder="say something" id="newmessage">
+              </div>
+              <button class="btn btn-warning">submit</button>
+              <a href="{{ url_for('newchannel') }}" class="btn btn-info">switch channel</a>   <a href="{{ url_for('signin') }}" class="btn btn-secondary">log out</a>
+          </form>
+
+          <form action="{{ url_for('upload_file') }}" method="post" enctype=multipart/form-data>
+            <div class="input-group">
+              <div class="custom-file">
+              <input type="file" class="form-control-file" id="file" name="file" aria-describedby="inputGroupFileAddon04">
+              </div>
+              <div class="input-group-append">
+                <input type=submit id="inputGroupFileAddon04" value=Upload class="btn btn-dark">
+               </div>
+               </div>
+          </form>
+
+        </div>
+    </body>
+</html>
